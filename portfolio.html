@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<!--
+  =====================================================================
+  V S S PHANENDRA  |  PORTFOLIO
+  Single file: HTML + CSS + vanilla JavaScript. No backend, no framework.
+  ---------------------------------------------------------------------
+  PLACEHOLDERS TO REPLACE (use Find & Replace in any text editor):
+
+    YOUR_EMAIL_HERE           your email address
+    YOUR_RESUME_LINK_HERE     public link to your resume (PDF / Drive)
+    YOUR_LINKEDIN_URL_HERE    your LinkedIn profile URL
+    YOUR_GITHUB_URL_HERE      your GitHub profile URL
+    YOUR_FORM_ENDPOINT_HERE   Formspree / Google Forms / Apps Script URL
+    PROJECT_IMAGE_1 .. 4      image URLs for the project gallery
+  =====================================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V S S PHANENDRA | Mechanical Engineering Student</title>
+  <meta name="description" content="Portfolio of V S S PHANENDRA, a Mechanical Engineering student working with AutoCAD, CATIA and Python. Featured project: River Cleaning Boat.">
+  <meta name="theme-color" content="#0D0F10">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Marks the page as "JS available" so scroll-reveal hiding only happens when JS runs -->
+  <script>document.documentElement.className += ' js';</script>
+
+  <!-- Only external resource: Google Fonts. Fallback fonts are defined in CSS if it is blocked. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+  <style>
+    /* ==========================================================
+       1. DESIGN TOKENS
+       ========================================================== */
+    :root {
+      /* Graphite surface scale */
+      --bg-0: #0D0F10;
+      --bg-1: #141618;
+      --bg-2: #1B1E21;
+      --bg-3: #24282C;
+
+      /* Text */
+      --ink: #FFFFFF;
+      --text: #D7D9DC;
+      --muted: #9BA1A8;
+
+      /* Lines */
+      --line: rgba(215, 217, 220, 0.12);
+      --line-strong: rgba(215, 217, 220, 0.28);
+
+      /* The single accent: muted steel blue (focus, progress, the 45 degree detail) */
+      --accent: #7FB2C4;
+
+      /* Type */
+      --font-sans: "Space Grotesk", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+
+      /* Layout */
+      --wrap: 1200px;
+      --gutter: clamp(20px, 5vw, 48px);
+      --nav-h: 68px;
+      --ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+
+      color-scheme: dark;
+    }
+
+    /* ==========================================================
+       2. RESET & BASE
+       ========================================================== */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg-0);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    h1, h2, h3, h4, p, figure, dl, dd { margin: 0; }
+    ul, ol { margin: 0; padding: 0; list-style: none; }
+    a { color: inherit; }
+    button, input, textarea { font: inherit; color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    .skip-link {
+      position: absolute; left: 16px; top: -60px; z-index: 100;
+      padding: 10px 16px; background: var(--ink); color: var(--bg-0);
+      text-decoration: none; font-weight: 600;
+      transition: top 0.2s var(--ease);
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* ==========================================================
+       3. LAYOUT HELPERS
+       ========================================================== */
+    .wrap {
+      width: 100%;
+      max-width: var(--wrap);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .section {
+      --card: var(--bg-1);
+      --card-hover: var(--bg-2);
+      padding: clamp(72px, 10vw, 128px) 0;
+      border-top: 1px solid var(--line);
+    }
+    .section--alt {
+      --card: var(--bg-2);
+      --card-hover: var(--bg-3);
+      background: var(--bg-1);
+    }
+    .section--cta { padding: clamp(56px, 8vw, 96px) 0; }
+
+    .section__head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: clamp(24px, 3.5vw, 40px);
+    }
+    .section__index {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .section__rule {
+      flex: 1;
+      height: 1px;
+      background: var(--line-strong);
+      transform-origin: left;
+      transition: transform 1.2s var(--ease) 0.15s;
+    }
+    .js .section__head:not(.is-visible) .section__rule { transform: scaleX(0); }
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .section__title {
+      font-size: clamp(1.9rem, 4.4vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* Engineering corner marks: reusable on any card / frame */
+    .ticked { position: relative; }
+    .ticked::before, .ticked::after {
+      content: "";
+      position: absolute;
+      width: 12px; height: 12px;
+      border: 0 solid var(--muted);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 3;
+      transition: width 0.4s var(--ease), height 0.4s var(--ease), border-color 0.4s, opacity 0.4s;
+    }
+    .ticked::before { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+    .ticked::after { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+    .ticked:hover::before, .ticked:hover::after {
+      width: 24px; height: 24px; border-color: var(--accent); opacity: 1;
+    }
+
+    /* ==========================================================
+       4. BUTTONS & LINKS
+       ========================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 50px;
+      padding: 0 24px;
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 500;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.3s var(--ease), background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .btn__arrow { width: 18px; height: 18px; flex: none; transition: transform 0.3s var(--ease); }
+    .btn:hover { transform: translateY(-2px); border-color: var(--ink); background: rgba(255, 255, 255, 0.06); }
+    .btn:hover .btn__arrow { transform: translateX(4px); }
+    .btn:active { transform: translateY(0); }
+    .btn[disabled] { opacity: 0.6; cursor: progress; }
+
+    .btn--primary { background: var(--ink); border-color: var(--ink); color: var(--bg-0); }
+    .btn--primary:hover { background: var(--text); border-color: var(--text); }
+
+    .btn--lg {
+      min-height: 60px;
+      padding: 0 34px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* Underline that grows on hover */
+    .link {
+      color: var(--ink);
+      text-decoration: none;
+      padding-bottom: 3px;
+      background:
+        linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat,
+        linear-gradient(var(--line-strong), var(--line-strong)) 0 100% / 100% 1px no-repeat;
+      transition: background-size 0.4s var(--ease);
+    }
+    .link:hover, .link:focus-visible { background-size: 100% 1px, 100% 1px; }
+
+    /* ==========================================================
+       5. NAVIGATION
+       ========================================================== */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13, 15, 16, 0.55);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: background-color 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+    .nav.is-scrolled { background: rgba(13, 15, 16, 0.94); border-bottom-color: var(--line); }
+
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--nav-h);
+    }
+    .nav__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav__mark { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linejoin: round; }
+
+    .nav__links { display: flex; align-items: center; gap: 4px; }
+    .nav__link {
+      position: relative;
+      padding: 8px 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav__link::after {
+      content: "";
+      position: absolute;
+      left: 14px; right: 14px; bottom: 2px;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s var(--ease);
+    }
+    .nav__link:hover, .nav__link[aria-current="true"] { color: var(--ink); }
+    .nav__link:hover::after, .nav__link[aria-current="true"]::after { transform: scaleX(1); }
+
+    .nav__toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 46px; height: 46px;
+      margin-right: -10px;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+    .nav__bars { position: relative; width: 22px; height: 12px; }
+    .nav__bars span {
+      position: absolute; left: 0; right: 0; height: 1.5px;
+      background: var(--ink);
+      transition: transform 0.3s var(--ease), top 0.3s var(--ease);
+    }
+    .nav__bars span:first-child { top: 0; }
+    .nav__bars span:last-child { top: 10.5px; }
+    .nav.is-open .nav__bars span:first-child { top: 5px; transform: rotate(45deg); }
+    .nav.is-open .nav__bars span:last-child { top: 5px; transform: rotate(-45deg); }
+
+    /* ==========================================================
+       6. HERO
+       ========================================================== */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: clip;
+      padding-block: clamp(48px, 8vw, 104px) clamp(56px, 8vw, 104px);
+    }
+
+    /* Drifting technical grid */
+    .hero__grid {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-mask-image: radial-gradient(ellipse at 72% 42%, #000 0%, transparent 74%);
+      mask-image: radial-gradient(ellipse at 72% 42%, #000 0%, transparent 74%);
+    }
+    .hero__grid::before {
+      content: "";
+      position: absolute;
+      inset: -64px;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 64px 64px;
+      animation: grid-drift 28s linear infinite;
+    }
+
+    .hero__inner { display: grid; gap: clamp(40px, 6vw, 64px); align-items: center; }
+
+    .hero__name {
+      margin-bottom: 28px;
+      font-size: clamp(2.4rem, 11.5vw, 5.4rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .hero__name .line {
+      display: block;
+      overflow: hidden;
+      padding: 0.03em 0.05em 0.05em;
+      margin: -0.03em -0.05em -0.05em;
+    }
+    .hero__name .line__inner {
+      display: block;
+      animation: line-rise 1s var(--ease) both;
+      animation-delay: 0.15s;
+    }
+    .hero__name .line:last-child .line__inner { animation-delay: 0.28s; }
+    /* The initials are drawn as an outline; the surname is solid */
+    .hero__name .line:first-child .line__inner {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--text);
+      letter-spacing: 0.04em;
+    }
+
+    .hero__role {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .hero__role::before { content: ""; width: 36px; height: 1px; background: var(--accent); }
+
+    .hero__lede { max-width: 34rem; font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: var(--text); }
+    .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+
+    /* Drawing sheet (right side) */
+    .hero__drawing {
+      width: 100%;
+      max-width: 560px;
+      margin-inline: auto;
+      animation: fade-in 1.6s ease 0.4s both;
+    }
+
+    .dwg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      color: var(--text);
+      font-family: var(--font-mono);
+    }
+    .dwg__sheet { fill: var(--bg-1); fill-opacity: 0.72; stroke: var(--line-strong); stroke-width: 1; }
+    .dwg .ln { fill: none; stroke: currentColor; stroke-width: 1.1; opacity: 0.5; }
+    .dwg .ln--soft { opacity: 0.25; }
+    .dwg .ln--strong { stroke-width: 1.5; opacity: 0.95; }
+    .dwg .ln--hidden { stroke-dasharray: 5 4; opacity: 0.45; }
+    .dwg .ln--centre { stroke-dasharray: 22 4 3 4; opacity: 0.35; }
+    .dwg .ln--dim { opacity: 0.7; }
+    .dwg .ln--accent { stroke: var(--accent); stroke-width: 1.6; opacity: 1; }
+    .dwg .ln--tick-minor { stroke-width: 8; stroke-dasharray: 1.2 16.602; opacity: 0.28; }
+    .dwg .ln--tick-major { stroke-width: 16; stroke-dasharray: 2 104.814; opacity: 0.5; }
+    .dwg__face { fill: var(--accent); fill-opacity: 0.16; }
+    .dwg__head { fill: var(--muted); }
+    .dwg__pt { fill: var(--ink); }
+    .dwg__txt { font-size: 11px; fill: var(--muted); letter-spacing: 0.04em; }
+    .dwg__txt--faint { font-size: 9px; opacity: 0.75; }
+    .dwg__txt--ink { fill: var(--ink); font-size: 11px; font-weight: 500; }
+    .dwg__txt--accent { fill: var(--accent); }
+
+    .spin { transform-box: view-box; transform-origin: 300px 285px; animation: spin 160s linear infinite; }
+    .spin--rev { animation-duration: 110s; animation-direction: reverse; }
+
+    .hero.is-offscreen .spin,
+    .hero.is-offscreen .hero__grid::before { animation-play-state: paused; }
+
+    /* ==========================================================
+       7. ABOUT
+       ========================================================== */
+    .about { display: grid; gap: clamp(32px, 5vw, 56px); }
+    .about__lead {
+      max-width: 34ch;
+      margin-bottom: 28px;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .about__copy p:not(.about__lead) { max-width: 60ch; }
+    .about__copy p:not(.about__lead) + p { margin-top: 18px; }
+
+    .notes { padding: 28px; background: var(--card); border: 1px solid var(--line); }
+    .notes__title {
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .notes__row {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: 16px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .notes__row dt { font-size: 0.9rem; color: var(--muted); }
+    .notes__row dd { color: var(--text); }
+
+    /* ==========================================================
+       8. SKILLS
+       ========================================================== */
+    .skill-groups { border-top: 1px solid var(--line); }
+    .skill-group { display: grid; gap: 24px; padding: 36px 0; border-bottom: 1px solid var(--line); }
+    .skill-group__title {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .skill-group__note { max-width: 28ch; font-size: 0.95rem; color: var(--muted); }
+    .skill-group__cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+
+    .skill {
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      transition: transform 0.4s var(--ease), border-color 0.4s, background-color 0.4s, box-shadow 0.4s;
+    }
+    .skill:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+      background: var(--card-hover);
+      box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.6);
+    }
+    .skill__icon {
+      width: 44px; height: 44px;
+      margin-bottom: 22px;
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 1.5;
+      stroke-linejoin: round;
+      transition: stroke 0.3s;
+    }
+    .skill:hover .skill__icon { stroke: var(--accent); }
+    .skill:hover .skill__icon > * { animation: draw 0.9s var(--ease); }
+    .skill__name { margin-bottom: 6px; font-size: 1.25rem; font-weight: 600; color: var(--ink); }
+    .skill__desc { font-size: 0.98rem; line-height: 1.55; color: var(--muted); }
+
+    /* ==========================================================
+       9. FEATURED PROJECT
+       ========================================================== */
+    .project__intro { display: grid; gap: 24px; margin-bottom: clamp(36px, 5vw, 64px); }
+    .project__lead { max-width: 42ch; font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--text); }
+    .project__lead + .project__lead { margin-top: 14px; color: var(--muted); font-size: 1.02rem; }
+
+    /* Showcase gallery: one large frame + three smaller ones */
+    .showcase { display: grid; gap: 16px; margin-bottom: clamp(40px, 6vw, 72px); }
+    .frame {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+    }
+    .frame__placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      gap: 8px;
+      padding: 16px;
+      text-align: center;
+      background:
+        linear-gradient(to top right, transparent calc(50% - 0.5px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+        linear-gradient(to top left, transparent calc(50% - 0.5px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px;
+      transition: transform 1.2s var(--ease);
+    }
+    .frame__label {
+      justify-self: center;
+      padding: 8px 14px;
+      background: var(--bg-2);
+      border: 1px solid var(--line-strong);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .frame__hint { justify-self: center; padding: 2px 8px; background: var(--bg-2); font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .frame__img {
+      position: absolute;
+      inset: 0;
+      display: none;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--ease);
+    }
+    .frame.is-loaded .frame__img { display: block; }
+    .frame.is-loaded .frame__placeholder { display: none; }
+    .frame:hover .frame__img, .frame:hover .frame__placeholder { transform: scale(1.03); }
+    .frame__caption {
+      position: absolute;
+      left: 0; bottom: 0;
+      z-index: 2;
+      padding: 8px 14px;
+      background: rgba(13, 15, 16, 0.86);
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    /* Detail cards */
+    .facts { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .fact {
+      padding: 28px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      transition: transform 0.4s var(--ease), border-color 0.4s, background-color 0.4s, box-shadow 0.4s;
+    }
+    .fact:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+      background: var(--card-hover);
+      box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.6);
+    }
+    .fact__title {
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .fact__text { max-width: 46ch; }
+    .fact--wide { grid-column: span 2; }
+    .fact--result { grid-column: 1 / -1; border-left: 3px solid var(--accent); }
+    .fact--result .fact__text { max-width: 60ch; font-size: clamp(1.15rem, 2vw, 1.45rem); line-height: 1.45; color: var(--ink); }
+
+    .fact--testing { display: grid; gap: 28px; align-items: center; }
+    .angle { width: 100%; height: auto; }
+    .angle__legend {
+      display: flex; flex-wrap: wrap; gap: 6px 18px;
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .swatch { display: inline-block; width: 22px; margin-right: 8px; vertical-align: middle; border-top: 1.5px solid currentColor; }
+    .swatch--dashed { border-top-style: dashed; }
+    .swatch--accent { color: var(--accent); }
+
+    /* Timeline (vertical on small screens, horizontal on wide) */
+    .timeline-block { margin-top: clamp(48px, 6vw, 80px); padding-top: 32px; border-top: 1px solid var(--line); }
+    .timeline-block__title {
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .timeline { position: relative; display: grid; grid-template-columns: 1fr; }
+    .timeline::before, .timeline::after {
+      content: "";
+      position: absolute;
+      left: 5px; top: 6px; bottom: 6px;
+      width: 1px;
+      background: var(--line-strong);
+    }
+    .timeline::after {
+      background: var(--accent);
+      transform-origin: top;
+      transition: transform 1.8s var(--ease) 0.2s;
+    }
+    .timeline__step {
+      position: relative;
+      padding: 0 0 28px 36px;
+      transition: opacity 0.6s ease calc(var(--i) * 0.3s + 0.2s);
+    }
+    .timeline__step:last-child { padding-bottom: 0; }
+    .timeline__dot {
+      position: absolute;
+      left: 0; top: 6px;
+      width: 11px; height: 11px;
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      transition: background-color 0.4s ease calc(var(--i) * 0.3s + 0.2s), border-color 0.4s ease calc(var(--i) * 0.3s + 0.2s);
+    }
+    .timeline__num { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+    .timeline__name {
+      margin: 2px 0 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .timeline__desc { max-width: 26ch; font-size: 0.95rem; line-height: 1.5; color: var(--muted); }
+
+    .js .timeline:not(.is-visible)::after { transform: scaleY(0); }
+    .js .timeline:not(.is-visible) .timeline__step { opacity: 0.35; }
+    .js .timeline:not(.is-visible) .timeline__dot { background: var(--bg-0); border-color: var(--line-strong); }
+
+    /* ==========================================================
+       10. ENGINEERING APPROACH
+       ========================================================== */
+    .steps { display: grid; gap: 8px 32px; grid-template-columns: 1fr; }
+    .step {
+      position: relative;
+      padding: 24px 0 32px;
+      border-top: 1px solid var(--line-strong);
+    }
+    .step::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--accent);
+      transform-origin: left;
+      transition: transform 1.2s var(--ease) var(--d, 0s);
+    }
+    .js .step:not(.is-visible)::before { transform: scaleX(0); }
+    .step__num {
+      display: block;
+      margin-bottom: 20px;
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+      transition: color 0.4s, -webkit-text-stroke-color 0.4s;
+    }
+    .step:hover .step__num { color: var(--ink); -webkit-text-stroke-color: var(--ink); }
+    .step__title {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .step__text { max-width: 30ch; color: var(--text); }
+    .steps__note { margin-top: 24px; font-size: 0.95rem; color: var(--muted); }
+
+    /* ==========================================================
+       11. RESUME CTA
+       ========================================================== */
+    .cta__panel {
+      position: relative;
+      display: grid;
+      gap: 36px;
+      padding: clamp(32px, 6vw, 72px);
+      overflow: hidden;
+      background: var(--bg-1);
+      border: 1px solid var(--line-strong);
+    }
+    .cta__grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-mask-image: linear-gradient(90deg, transparent 25%, #000);
+      mask-image: linear-gradient(90deg, transparent 25%, #000);
+    }
+    .cta__body { position: relative; }
+    .cta__title {
+      max-width: 18ch;
+      margin-bottom: 20px;
+      font-size: clamp(2rem, 5.2vw, 4.25rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .cta__text { max-width: 44ch; font-size: 1.1rem; color: var(--text); }
+    .cta__action { position: relative; }
+
+    /* ==========================================================
+       12. CONTACT
+       ========================================================== */
+    .contact { display: grid; gap: 48px; }
+    .contact__lead { max-width: 32ch; margin: 24px 0 32px; font-size: 1.2rem; color: var(--text); }
+    .contact__email { font-size: clamp(1.1rem, 2.4vw, 1.5rem); word-break: break-word; }
+
+    .form { display: grid; gap: 20px; }
+    .field { display: grid; gap: 8px; }
+    .field__label { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+    .field__control {
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      background: var(--bg-0);
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      color: var(--ink);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .field__control::placeholder { color: var(--muted); opacity: 0.8; }
+    .field__control:hover { border-color: var(--muted); }
+    .field__control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(127, 178, 196, 0.22); }
+    textarea.field__control { min-height: 160px; resize: vertical; }
+
+    .form__row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+    .form__status { min-height: 1.5em; font-size: 0.95rem; color: var(--muted); }
+    .form__status[data-state="ok"] { color: var(--accent); }
+    .form__status[data-state="warn"] { color: var(--text); }
+    .form__status[data-state="error"] { color: #E59A9A; }
+    .form__fallback { font-size: 0.95rem; color: var(--muted); }
+
+    /* ==========================================================
+       13. FOOTER
+       ========================================================== */
+    .footer { padding: 40px 0; border-top: 1px solid var(--line); }
+    .footer__inner { display: grid; gap: 28px; }
+    .footer__name { font-weight: 600; letter-spacing: 0.16em; color: var(--ink); }
+    .footer__role { font-size: 0.95rem; color: var(--muted); }
+    .footer__links { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+    .footer__copy { font-size: 0.9rem; color: var(--muted); }
+
+    /* Toast (used when a placeholder link is clicked) */
+    .toast {
+      position: fixed;
+      left: 50%; bottom: 24px;
+      z-index: 60;
+      max-width: min(92%, 520px);
+      padding: 12px 18px;
+      background: var(--bg-3);
+      border: 1px solid var(--line-strong);
+      color: var(--ink);
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 16px);
+      transition: opacity 0.3s, transform 0.3s var(--ease);
+    }
+    .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ==========================================================
+       14. MOTION
+       ========================================================== */
+    @keyframes grid-drift { to { transform: translate(64px, 64px); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes line-rise { from { transform: translateY(105%); } }
+    @keyframes rise { from { opacity: 0; translate: 0 16px; } }
+    @keyframes fade-in { from { opacity: 0; } }
+    @keyframes draw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
+    @keyframes reveal { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+
+    .rise { animation: rise 0.9s var(--ease) both; animation-delay: var(--d, 0s); }
+
+    /* Scroll reveal: uses the "translate" property so hover transforms stay free */
+    .js .reveal { opacity: 0; }
+    .js .reveal.is-visible { animation: reveal 0.8s var(--ease) both; animation-delay: var(--d, 0s); }
+
+    /* ==========================================================
+       15. RESPONSIVE
+       ========================================================== */
+    @media (min-width: 640px) {
+      .fact--testing { grid-template-columns: minmax(0, 1fr) minmax(200px, 270px); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 800px) {
+      .showcase {
+        grid-template-columns: 1.7fr 1fr;
+        grid-template-rows: repeat(3, minmax(0, 1fr));
+        height: clamp(380px, 44vw, 540px);
+      }
+      .frame { aspect-ratio: auto; }
+      .frame--main { grid-row: 1 / span 3; }
+    }
+
+    @media (min-width: 900px) {
+      .about { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 80px; align-items: start; }
+      .skill-group { grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 48px; }
+      .project__intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: end; gap: 64px; }
+      .cta__panel { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 48px; }
+      .contact { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 80px; }
+      .footer__inner { grid-template-columns: 1fr auto auto; align-items: center; gap: 48px; }
+    }
+
+    @media (min-width: 960px) {
+      .hero__inner { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+      .hero__name { font-size: clamp(3rem, 6.2vw, 5.4rem); }
+      .hero__drawing { margin-inline: 0 0; justify-self: end; }
+    }
+
+    @media (min-width: 980px) {
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .timeline { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 24px; }
+      .timeline::before, .timeline::after { left: 5px; right: 0; top: 5px; bottom: auto; width: auto; height: 1px; }
+      .timeline::after { transform-origin: left; }
+      .timeline__step { padding: 34px 0 0; }
+      .timeline__dot { top: 0; }
+      .js .timeline:not(.is-visible)::after { transform: scaleX(0); }
+    }
+
+    @media (max-width: 860px) {
+      .nav__toggle { display: inline-flex; }
+      .nav__links {
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 4px var(--gutter) 20px;
+        background: var(--bg-1);
+        border-bottom: 1px solid var(--line);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0s linear 0.25s;
+      }
+      .nav.is-open .nav__links { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+      .nav.is-open { background: rgba(13, 15, 16, 0.96); }
+      .nav__link { padding: 16px 0; font-size: 1.1rem; border-top: 1px solid var(--line); }
+      .nav__link::after { left: 0; right: 0; bottom: auto; top: -1px; }
+    }
+
+    @media (max-width: 899px) {
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 639px) {
+      body { font-size: 1rem; }
+      .facts { grid-template-columns: 1fr; }
+      .fact--wide { grid-column: auto; }
+      .fact { padding: 24px; }
+      .notes__row { grid-template-columns: 92px minmax(0, 1fr); }
+      .hero__name .line:first-child .line__inner { -webkit-text-stroke-width: 1.25px; }
+      .btn { width: 100%; }
+      .btn--lg { padding: 0 24px; }
+    }
+
+    /* ==========================================================
+       16. REDUCED MOTION
+       ========================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        transition-delay: 0s !important;
+      }
+      .spin, .hero__grid::before { animation: none !important; }
+      .js .reveal { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Shared icon: arrow used inside buttons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-arrow" viewBox="0 0 20 20">
+      <path d="M3 10h13M11 4.5 16.5 10 11 15.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+  </svg>
+
+  <a class="skip-link" href="#about">Skip to content</a>
+
+  <!-- ===================================================
+       1. NAVIGATION
+       =================================================== -->
+  <header class="nav" id="nav">
+    <div class="wrap nav__inner">
+      <a class="nav__brand" href="#top" aria-label="V S S PHANENDRA, back to top">
+        <svg class="nav__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 2 20.5 7v10L12 22 3.5 17V7Z"/>
+          <path d="M12 12 3.5 7M12 12l8.5-5M12 12v10"/>
+        </svg>
+        <span>V S S PHANENDRA</span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <span class="nav__bars" aria-hidden="true"><span></span><span></span></span>
+      </button>
+
+      <nav class="nav__links" id="nav-links" aria-label="Primary">
+        <a class="nav__link" href="#about">About</a>
+        <a class="nav__link" href="#skills">Skills</a>
+        <a class="nav__link" href="#project">Project</a>
+        <a class="nav__link" href="#resume">Resume</a>
+        <a class="nav__link" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================================================
+         2. HERO
+         =================================================== -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__grid" aria-hidden="true"></div>
+
+      <div class="wrap hero__inner">
+        <div class="hero__copy">
+          <h1 class="hero__name" id="hero-title">
+            <span class="line"><span class="line__inner">V S S</span></span>
+            <span class="line"><span class="line__inner">PHANENDRA</span></span>
+          </h1>
+
+          <p class="hero__role rise" style="--d:.55s">Mechanical Engineering Student</p>
+          <p class="hero__lede rise" style="--d:.7s">Designing mechanical solutions with CAD, engineering fundamentals, and modern technology.</p>
+
+          <div class="hero__actions rise" style="--d:.85s">
+            <a class="btn btn--primary" href="#project">
+              View My Project
+              <svg class="btn__arrow" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg>
+            </a>
+            <!-- REPLACE: YOUR_RESUME_LINK_HERE -->
+            <a class="btn" href="YOUR_RESUME_LINK_HERE" target="_blank" rel="noopener noreferrer">
+              View Resume
+              <svg class="btn__arrow" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Engineering drawing sheet: pure SVG + CSS, decorative -->
+        <div class="hero__drawing" aria-hidden="true">
+          <svg class="dwg" viewBox="0 0 600 600" focusable="false">
+            <defs>
+              <marker id="dwg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path class="dwg__head" d="M0 1 10 5 0 9Z"/>
+              </marker>
+            </defs>
+
+            <!-- Sheet border and zone marks -->
+            <rect class="dwg__sheet" x="10" y="10" width="580" height="580"/>
+            <rect class="ln ln--soft" x="26" y="26" width="548" height="548"/>
+            <path class="ln ln--soft" d="M175 10v16M300 10v16M425 10v16M175 574v16M300 574v16M425 574v16M10 175h16M10 300h16M10 425h16M574 175h16M574 300h16M574 425h16"/>
+            <g class="dwg__txt dwg__txt--faint" text-anchor="middle">
+              <text x="100" y="22">4</text><text x="237" y="22">3</text><text x="362" y="22">2</text><text x="500" y="22">1</text>
+              <text x="18" y="103">A</text><text x="18" y="240">B</text><text x="18" y="365">C</text><text x="18" y="503">D</text>
+            </g>
+
+            <!-- Crosshair marks -->
+            <path class="ln ln--soft" d="M92 120h16M100 112v16M492 120h16M500 112v16"/>
+
+            <!-- Degree scale and outer ring (slow rotation) -->
+            <g class="spin">
+              <circle class="ln" cx="300" cy="285" r="212"/>
+              <circle class="ln ln--tick-minor" cx="300" cy="285" r="204"/>
+              <circle class="ln ln--tick-major" cx="300" cy="285" r="204"/>
+            </g>
+
+            <!-- Hexagon construction (counter rotation) -->
+            <g class="spin spin--rev">
+              <polygon class="ln ln--strong" points="450,285 375,414.9 225,414.9 150,285 225,155.1 375,155.1"/>
+              <path class="ln ln--hidden" d="M150 285H450M225 155.1 375 414.9M375 155.1 225 414.9"/>
+              <circle class="ln" cx="300" cy="285" r="129.9"/>
+            </g>
+
+            <!-- Centre lines -->
+            <circle class="ln ln--centre" cx="300" cy="285" r="100"/>
+            <path class="ln ln--centre" d="M70 285H530M300 55V515"/>
+
+            <!-- Isometric wireframe cube with hidden edges -->
+            <polygon class="dwg__face" points="300,285 234.2,247 300,209 365.8,247"/>
+            <path class="ln ln--hidden" d="M300 285V209M300 285 365.8 323M300 285 234.2 323"/>
+            <polygon class="ln ln--strong" points="300,209 365.8,247 365.8,323 300,361 234.2,323 234.2,247"/>
+            <path class="ln ln--strong" d="M300 285 234.2 247M300 285 365.8 247M300 285V361"/>
+
+            <!-- Vertical dimension (outer diameter) -->
+            <path class="ln ln--soft" d="M306 73H564M306 497H564"/>
+            <path class="ln ln--dim" d="M556 73V262" marker-start="url(#dwg-arrow)"/>
+            <path class="ln ln--dim" d="M556 308V497" marker-end="url(#dwg-arrow)"/>
+            <text class="dwg__txt" x="560" y="285" text-anchor="middle" transform="rotate(-90 560 285)">Ø D1</text>
+
+            <!-- Radius leader -->
+            <path class="ln ln--dim" d="M462.4 421.3 496 452H536" marker-start="url(#dwg-arrow)"/>
+            <text class="dwg__txt" x="516" y="446" text-anchor="middle">R1</text>
+
+            <!-- Angle detail: 30 to 45 degrees -->
+            <path class="ln ln--strong" d="M48 496H170"/>
+            <path class="ln ln--hidden" d="M48 496 125.9 451"/>
+            <path class="ln ln--accent" d="M48 496 111.6 432.4"/>
+            <path class="ln ln--dim" d="M112 496A64 64 0 0 0 103.4 464"/>
+            <path class="ln ln--accent" d="M132 496A84 84 0 0 0 107.4 436.6"/>
+            <circle class="dwg__pt" cx="48" cy="496" r="2.5"/>
+            <text class="dwg__txt" x="131" y="455">30°</text>
+            <text class="dwg__txt dwg__txt--accent" x="116" y="431">45°</text>
+            <text class="dwg__txt dwg__txt--faint" x="48" y="514">MECHANISM ANGLE</text>
+
+            <!-- Caption and coordinates -->
+            <text class="dwg__txt dwg__txt--ink" x="44" y="62">FIG. 01</text>
+            <text class="dwg__txt dwg__txt--faint" x="44" y="77">CONSTRUCTION GEOMETRY</text>
+            <text class="dwg__txt dwg__txt--faint" x="44" y="548">X 0.00   Y 0.00   Z 0.00</text>
+
+            <!-- Title block -->
+            <rect class="ln ln--strong" x="372" y="520" width="200" height="52"/>
+            <path class="ln ln--soft" d="M372 546H572M484 546V572"/>
+            <text class="dwg__txt dwg__txt--ink" x="382" y="538">V S S PHANENDRA</text>
+            <text class="dwg__txt dwg__txt--faint" x="380" y="563" style="font-size:8.5px">MECH. ENGINEERING</text>
+            <text class="dwg__txt dwg__txt--faint" x="492" y="563" style="font-size:8.5px">SCALE N.T.S.</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         3. ABOUT
+         =================================================== -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <span class="section__index" aria-hidden="true">01</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <h2 class="section__title reveal" id="about-title" style="margin-bottom:clamp(28px,4vw,48px)">About me</h2>
+
+        <div class="about">
+          <div class="about__copy" data-stagger>
+            <p class="about__lead reveal">I am a Mechanical Engineering student interested in mechanical design, CAD modeling, engineering problem solving, and modern technology.</p>
+            <p class="reveal">I use AutoCAD for 2D drafting and CATIA for 3D modeling, and I work with HTML, CSS, JavaScript and Python to build interfaces and solve problems in code.</p>
+            <p class="reveal">I enjoy combining engineering concepts with practical design and technology. My featured project, the River Cleaning Boat, follows that approach: a mechanical design problem that was prototyped, tested and improved.</p>
+          </div>
+
+          <aside class="notes ticked reveal" aria-label="General notes">
+            <h3 class="notes__title">General notes</h3>
+            <dl>
+              <div class="notes__row"><dt>Field</dt><dd>Mechanical Engineering (student)</dd></div>
+              <div class="notes__row"><dt>Interests</dt><dd>Mechanical design, CAD modeling, engineering problem solving</dd></div>
+              <div class="notes__row"><dt>Tools</dt><dd>AutoCAD, CATIA, HTML, CSS, JavaScript, Python</dd></div>
+              <div class="notes__row"><dt>Featured work</dt><dd>River Cleaning Boat</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         4. SKILLS
+         =================================================== -->
+    <section class="section section--alt" id="skills" aria-labelledby="skills-title">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <span class="section__index" aria-hidden="true">02</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <h2 class="section__title reveal" id="skills-title" style="margin-bottom:clamp(28px,4vw,48px)">Skills</h2>
+
+        <div class="skill-groups">
+
+          <!-- CAD & DESIGN -->
+          <div class="skill-group">
+            <div class="skill-group__label reveal">
+              <h3 class="skill-group__title">CAD &amp; Design</h3>
+              <p class="skill-group__note">Drafting and 3D modeling.</p>
+            </div>
+            <div class="skill-group__cards" data-stagger>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <rect pathLength="1" x="10" y="20" width="28" height="20"/>
+                  <circle pathLength="1" cx="24" cy="30" r="5"/>
+                  <path pathLength="1" d="M10 12H38M10 8v8M38 8v8"/>
+                </svg>
+                <h4 class="skill__name">AutoCAD</h4>
+                <p class="skill__desc">2D drafting and engineering drawing</p>
+              </article>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path pathLength="1" d="M24 6 40 15v18L24 42 8 33V15Z"/>
+                  <path pathLength="1" d="M24 24 8 15M24 24 40 15M24 24v18"/>
+                </svg>
+                <h4 class="skill__name">CATIA</h4>
+                <p class="skill__desc">3D mechanical modeling and product design</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- WEB TECHNOLOGY -->
+          <div class="skill-group">
+            <div class="skill-group__label reveal">
+              <h3 class="skill-group__title">Web Technology</h3>
+              <p class="skill-group__note">Frontend development and interactive web interfaces. This portfolio is written in plain HTML, CSS and JavaScript.</p>
+            </div>
+            <div class="skill-group__cards" data-stagger>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path pathLength="1" d="M18 14 8 24l10 10"/>
+                  <path pathLength="1" d="M30 14l10 10-10 10"/>
+                  <path pathLength="1" d="M27 10 21 38"/>
+                </svg>
+                <h4 class="skill__name">HTML</h4>
+                <p class="skill__desc">Semantic structure for web pages and content</p>
+              </article>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <rect pathLength="1" x="8" y="8" width="32" height="32"/>
+                  <path pathLength="1" d="M8 18H40M20 18V40"/>
+                </svg>
+                <h4 class="skill__name">CSS</h4>
+                <p class="skill__desc">Layout, styling and responsive design</p>
+              </article>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path pathLength="1" d="M18 8c-4 0-6 2-6 6v4c0 3-2 5-4 6 2 1 4 3 4 6v4c0 4 2 6 6 6"/>
+                  <path pathLength="1" d="M30 8c4 0 6 2 6 6v4c0 3 2 5 4 6-2 1-4 3-4 6v4c0 4-2 6-6 6"/>
+                </svg>
+                <h4 class="skill__name">JavaScript</h4>
+                <p class="skill__desc">Interactivity and dynamic behavior in the browser</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- PROGRAMMING -->
+          <div class="skill-group">
+            <div class="skill-group__label reveal">
+              <h3 class="skill-group__title">Programming</h3>
+              <p class="skill-group__note">Engineering-oriented problem solving.</p>
+            </div>
+            <div class="skill-group__cards" data-stagger>
+              <article class="skill ticked reveal">
+                <svg class="skill__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <rect pathLength="1" x="5" y="8" width="38" height="32"/>
+                  <path pathLength="1" d="M12 18 20 24 12 30"/>
+                  <path pathLength="1" d="M25 31H36"/>
+                </svg>
+                <h4 class="skill__name">Python</h4>
+                <p class="skill__desc">Programming and engineering-oriented problem solving</p>
+              </article>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         5. FEATURED PROJECT: RIVER CLEANING BOAT
+         =================================================== -->
+    <section class="section" id="project" aria-labelledby="project-title">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <span class="section__index" aria-hidden="true">03</span>
+          <span class="section__rule" aria-hidden="true"></span>
+          <span class="section__label">Featured project</span>
+        </div>
+
+        <div class="project__intro">
+          <h2 class="section__title reveal" id="project-title">River Cleaning Boat</h2>
+          <div class="reveal">
+            <p class="project__lead">A prototype designed to collect floating plastic and waste from river water using a remotely controlled mechanism.</p>
+            <p class="project__lead">The project combines mechanical design, Bluetooth-based remote control and hands-on prototype testing.</p>
+          </div>
+        </div>
+
+        <!-- Project showcase.
+             TO ADD YOUR IMAGES: replace PROJECT_IMAGE_1..4 in the src attributes below with real image URLs.
+             Until an image loads, the labelled placeholder is shown. Update each alt text to describe your real image. -->
+        <div class="showcase" data-stagger>
+          <figure class="frame frame--main ticked reveal">
+            <div class="frame__placeholder" aria-hidden="true">
+              <span class="frame__label">Project image</span>
+              <span class="frame__hint">Replace PROJECT_IMAGE_1</span>
+            </div>
+            <img class="frame__img" src="PROJECT_IMAGE_1" alt="River Cleaning Boat, project image" loading="lazy" decoding="async">
+            <figcaption class="frame__caption">Project image</figcaption>
+          </figure>
+
+          <figure class="frame ticked reveal">
+            <div class="frame__placeholder" aria-hidden="true">
+              <span class="frame__label">CAD model</span>
+              <span class="frame__hint">Replace PROJECT_IMAGE_2</span>
+            </div>
+            <img class="frame__img" src="PROJECT_IMAGE_2" alt="River Cleaning Boat, CAD model" loading="lazy" decoding="async">
+            <figcaption class="frame__caption">CAD model</figcaption>
+          </figure>
+
+          <figure class="frame ticked reveal">
+            <div class="frame__placeholder" aria-hidden="true">
+              <span class="frame__label">Prototype</span>
+              <span class="frame__hint">Replace PROJECT_IMAGE_3</span>
+            </div>
+            <img class="frame__img" src="PROJECT_IMAGE_3" alt="River Cleaning Boat, prototype" loading="lazy" decoding="async">
+            <figcaption class="frame__caption">Prototype</figcaption>
+          </figure>
+
+          <figure class="frame ticked reveal">
+            <div class="frame__placeholder" aria-hidden="true">
+              <span class="frame__label">Testing</span>
+              <span class="frame__hint">Replace PROJECT_IMAGE_4</span>
+            </div>
+            <img class="frame__img" src="PROJECT_IMAGE_4" alt="River Cleaning Boat, testing" loading="lazy" decoding="async">
+            <figcaption class="frame__caption">Testing</figcaption>
+          </figure>
+        </div>
+
+        <!-- Project detail cards -->
+        <div class="facts" data-stagger>
+          <article class="fact ticked reveal">
+            <h3 class="fact__title">Problem</h3>
+            <p class="fact__text">Floating plastic and waste can accumulate on water surfaces and create environmental problems.</p>
+          </article>
+          <article class="fact ticked reveal">
+            <h3 class="fact__title">Concept</h3>
+            <p class="fact__text">A compact floating boat mechanism designed to collect floating waste.</p>
+          </article>
+          <article class="fact ticked reveal">
+            <h3 class="fact__title">Control</h3>
+            <p class="fact__text">Bluetooth-based control from a mobile device.</p>
+          </article>
+          <article class="fact ticked reveal">
+            <h3 class="fact__title">Prototype</h3>
+            <p class="fact__text">A physical prototype was developed and tested.</p>
+          </article>
+
+          <article class="fact fact--wide fact--testing ticked reveal">
+            <div>
+              <h3 class="fact__title">Testing</h3>
+              <p class="fact__text">During testing, the collection mechanism was modified from approximately 30° to 45° to improve waste collection performance.</p>
+            </div>
+            <figure>
+              <svg class="dwg angle" viewBox="0 0 260 150" role="img" aria-label="Schematic showing the collection mechanism angle changed from about 30 degrees to 45 degrees">
+                <path class="ln ln--strong" d="M20 132H240"/>
+                <path class="ln ln--hidden" d="M20 132 149.9 57"/>
+                <path class="ln ln--accent" d="M20 132 126.1 25.9"/>
+                <path class="ln ln--dim" d="M120 132A100 100 0 0 0 106.6 82"/>
+                <path class="ln ln--accent" d="M90 132A70 70 0 0 0 69.5 82.5"/>
+                <circle class="dwg__pt" cx="20" cy="132" r="3"/>
+                <text class="dwg__txt" x="156" y="60">≈30°</text>
+                <text class="dwg__txt dwg__txt--accent" x="132" y="28">45°</text>
+              </svg>
+              <figcaption class="angle__legend">
+                <span><i class="swatch swatch--dashed"></i>Initial, approx. 30°</span>
+                <span><i class="swatch swatch--accent"></i>Modified, 45°</span>
+                <span>Illustrative schematic, not to scale</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="fact fact--result ticked reveal">
+            <h3 class="fact__title">Result</h3>
+            <p class="fact__text">The modified mechanism demonstrated improved collection performance during prototype testing.</p>
+          </article>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-block">
+          <h3 class="timeline-block__title reveal">Project timeline</h3>
+          <ol class="timeline" data-timeline>
+            <li class="timeline__step" style="--i:0"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">01</span><h4 class="timeline__name">Problem</h4><p class="timeline__desc">Floating waste on river surfaces.</p></li>
+            <li class="timeline__step" style="--i:1"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">02</span><h4 class="timeline__name">Concept</h4><p class="timeline__desc">A compact floating collection boat.</p></li>
+            <li class="timeline__step" style="--i:2"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">03</span><h4 class="timeline__name">Design</h4><p class="timeline__desc">Mechanism design and CAD modeling.</p></li>
+            <li class="timeline__step" style="--i:3"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">04</span><h4 class="timeline__name">Prototype</h4><p class="timeline__desc">A physical prototype was built.</p></li>
+            <li class="timeline__step" style="--i:4"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">05</span><h4 class="timeline__name">Testing</h4><p class="timeline__desc">Collection performance was tested.</p></li>
+            <li class="timeline__step" style="--i:5"><span class="timeline__dot" aria-hidden="true"></span><span class="timeline__num">06</span><h4 class="timeline__name">Improvement</h4><p class="timeline__desc">Mechanism angle changed from approx. 30° to 45°.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         6. ENGINEERING APPROACH
+         =================================================== -->
+    <section class="section section--alt" id="approach" aria-labelledby="approach-title">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <span class="section__index" aria-hidden="true">04</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <h2 class="section__title reveal" id="approach-title" style="margin-bottom:clamp(28px,4vw,48px)">How I approach engineering</h2>
+
+        <ol class="steps" data-stagger>
+          <li class="step reveal">
+            <span class="step__num" aria-hidden="true">01</span>
+            <h3 class="step__title">Understand</h3>
+            <p class="step__text">Understand the problem and requirements.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num" aria-hidden="true">02</span>
+            <h3 class="step__title">Design</h3>
+            <p class="step__text">Develop concepts and CAD-based solutions.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num" aria-hidden="true">03</span>
+            <h3 class="step__title">Build</h3>
+            <p class="step__text">Create a prototype or practical implementation.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num" aria-hidden="true">04</span>
+            <h3 class="step__title">Test &amp; improve</h3>
+            <p class="step__text">Test the design and refine it based on results.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         7. RESUME CTA
+         =================================================== -->
+    <section class="section section--cta" id="resume" aria-labelledby="resume-title">
+      <div class="wrap">
+        <div class="cta__panel ticked reveal">
+          <div class="cta__grid" aria-hidden="true"></div>
+          <div class="cta__body">
+            <h2 class="cta__title" id="resume-title">Interested in my engineering work?</h2>
+            <p class="cta__text">Explore my resume to learn more about my education, skills and projects.</p>
+          </div>
+          <div class="cta__action">
+            <!-- REPLACE: YOUR_RESUME_LINK_HERE -->
+            <a class="btn btn--primary btn--lg" href="YOUR_RESUME_LINK_HERE" target="_blank" rel="noopener noreferrer">
+              View Resume
+              <svg class="btn__arrow" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         8. CONTACT
+         =================================================== -->
+    <section class="section section--alt" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <span class="section__index" aria-hidden="true">05</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+
+        <div class="contact">
+          <div class="reveal">
+            <h2 class="section__title" id="contact-title">Let’s connect</h2>
+            <p class="contact__lead">Have a project, technical idea, or opportunity you’d like to discuss?</p>
+            <!-- REPLACE: YOUR_EMAIL_HERE (twice on this line) -->
+            <p class="contact__email"><a class="link" href="mailto:YOUR_EMAIL_HERE" target="_blank" rel="noopener">YOUR_EMAIL_HERE</a></p>
+          </div>
+
+          <!-- CONTACT FORM
+               No backend is included. Replace YOUR_FORM_ENDPOINT_HERE in the action attribute with your
+               Formspree / Google Forms / Google Apps Script URL. Until then the form shows a clear
+               "not connected" message and does NOT pretend to send anything. -->
+          <form class="form reveal" id="contact-form" action="YOUR_FORM_ENDPOINT_HERE" method="POST">
+            <div class="field">
+              <label class="field__label" for="f-name">Name</label>
+              <input class="field__control" id="f-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-email">Email</label>
+              <input class="field__control" id="f-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-message">Message</label>
+              <textarea class="field__control" id="f-message" name="message" placeholder="Tell me about your project or idea" required></textarea>
+            </div>
+            <div class="form__row">
+              <button class="btn btn--primary" type="submit">
+                Send Message
+                <svg class="btn__arrow" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg>
+              </button>
+              <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+            </div>
+            <!-- Mailto fallback. REPLACE: YOUR_EMAIL_HERE -->
+            <p class="form__fallback">Prefer email? <a class="link" href="mailto:YOUR_EMAIL_HERE?subject=Portfolio%20enquiry" target="_blank" rel="noopener">Write to me directly</a>.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================
+       9. FOOTER
+       =================================================== -->
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <p class="footer__name">V S S PHANENDRA</p>
+        <p class="footer__role">Mechanical Engineering Student</p>
+      </div>
+      <nav aria-label="Contact and social links">
+        <ul class="footer__links">
+          <li><a class="link" href="vemulasrisaiphanindra@gmail.com" target="_blank" rel="noopener">Email 1</a></li>
+          <li><a class="link" href="vemulasrisaiphanendra@gmail.com" target="_blank" rel="noopener">Email 2</a></li>
+          <li><a class="link" href="YOUR_LINKEDIN_URL_HERE" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a class="link" href="YOUR_GITHUB_URL_HERE" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </nav>
+      <p class="footer__copy">© 2026 V S S PHANENDRA</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* ==========================================================
+       SITE SCRIPT (vanilla JS, no dependencies)
+       Written to work inside an iframe (e.g. Google Sites embed):
+       it scrolls only its own window and never touches window.top.
+       ========================================================== */
+    (function () {
+      'use strict';
+
+      const nav = document.getElementById('nav');
+      const toggle = nav.querySelector('.nav__toggle');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      /* ---------- 1. Navigation: opaque on scroll ---------- */
+      const onScroll = () => nav.classList.toggle('is-scrolled', window.pageYOffset > 8);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ---------- 2. Mobile menu ---------- */
+      const setMenu = (open) => {
+        nav.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      };
+      toggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+          setMenu(false);
+          toggle.focus({ preventScroll: true });
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (nav.classList.contains('is-open') && !nav.contains(e.target)) setMenu(false);
+      });
+      window.addEventListener('resize', () => { if (window.innerWidth > 860) setMenu(false); });
+
+      /* ---------- 3. Smooth scrolling to sections ----------
+         Uses window.scrollTo (not scrollIntoView) so that, when embedded,
+         only this frame scrolls and the parent page is left alone. */
+      const scrollToId = (id) => {
+        const target = document.getElementById(id);
+        if (!target) return;
+        const top = target.getBoundingClientRect().top + window.pageYOffset - nav.offsetHeight + 1;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      };
+
+      document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        const id = link.getAttribute('href').slice(1);
+        if (!id || !document.getElementById(id)) return;
+        e.preventDefault();
+        setMenu(false);
+        scrollToId(id);
+      });
+
+      /* ---------- 4. Placeholder links ----------
+         While a link still contains a YOUR_..._HERE placeholder, show a hint instead of navigating. */
+      const toast = document.getElementById('toast');
+      let toastTimer;
+      const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.add('is-on');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('is-on'), 4200);
+      };
+
+      document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href*="YOUR_"]');
+        if (!link) return;
+        const token = (link.getAttribute('href').match(/YOUR_[A-Z_]+_HERE/) || ['a placeholder'])[0];
+        e.preventDefault();
+        showToast('Placeholder link. Replace ' + token + ' in the code.');
+      });
+
+      /* ---------- 5. Scroll spy (highlights the current nav link) ---------- */
+      const linkById = {};
+      nav.querySelectorAll('.nav__link').forEach((l) => { linkById[l.getAttribute('href').slice(1)] = l; });
+
+      if ('IntersectionObserver' in window) {
+        const spy = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            Object.keys(linkById).forEach((id) => linkById[id].removeAttribute('aria-current'));
+            const active = linkById[entry.target.id];
+            if (active) active.setAttribute('aria-current', 'true');
+          });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        document.querySelectorAll('main > section[id]').forEach((s) => spy.observe(s));
+      }
+
+      /* ---------- 6. Scroll reveal, timeline and process animation ---------- */
+      document.querySelectorAll('[data-stagger]').forEach((group) => {
+        Array.from(group.children).forEach((child, i) => child.style.setProperty('--d', Math.min(i, 5) * 90 + 'ms'));
+      });
+
+      const revealTargets = document.querySelectorAll('.reveal, [data-timeline]');
+      if (!('IntersectionObserver' in window) || reduceMotion.matches) {
+        revealTargets.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const reveal = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+        revealTargets.forEach((el) => reveal.observe(el));
+      }
+
+      /* ---------- 7. Pause hero animation when off-screen ---------- */
+      const hero = document.querySelector('.hero');
+      if (hero && 'IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          hero.classList.toggle('is-offscreen', !entries[0].isIntersecting);
+        }).observe(hero);
+      }
+
+      /* ---------- 8. Project images: show the real image once it loads,
+                        otherwise keep the labelled placeholder ---------- */
+      document.querySelectorAll('.frame').forEach((frame) => {
+        const img = frame.querySelector('.frame__img');
+        if (!img) return;
+        const markLoaded = () => frame.classList.add('is-loaded');
+        const markMissing = () => frame.classList.remove('is-loaded');
+        img.addEventListener('load', markLoaded);
+        img.addEventListener('error', markMissing);
+        if (img.complete && img.naturalWidth > 0) markLoaded();
+      });
+
+      /* ---------- 9. Contact form ----------
+         Works with Formspree (JSON), Google Apps Script and Google Forms (no-cors).
+         With no endpoint configured it says so honestly and sends nothing. */
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+      const setStatus = (message, state) => {
+        status.textContent = message;
+        status.dataset.state = state || '';
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const endpoint = (form.getAttribute('action') || '').trim();
+        const button = form.querySelector('button[type="submit"]');
+
+        if (!endpoint || endpoint.indexOf('YOUR_FORM_ENDPOINT') !== -1) {
+          setStatus('This form is not connected yet. Please use the email link below.', 'warn');
+          return;
+        }
+
+        const isGoogle = /docs\.google\.com|script\.google\.com/.test(endpoint);
+        button.disabled = true;
+        setStatus('Sending…', '');
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            body: new FormData(form),
+            mode: isGoogle ? 'no-cors' : 'cors',
+            headers: isGoogle ? undefined : { Accept: 'application/json' }
+          });
+          if (!isGoogle && !response.ok) throw new Error('Request failed');
+          form.reset();
+          setStatus('Message sent. Thank you.', 'ok');
+        } catch (err) {
+          setStatus('The message could not be sent. Please use the email link below.', 'error');
+        } finally {
+          button.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
